@@ -39,7 +39,13 @@ export default function VideoDetailsPage({ params }: { params: { slug: string } 
       <div className="container grid grid-cols-1 gap-10 pt-8 lg:grid-cols-[1fr_340px]">
         {/* Main column */}
         <div>
-          <VideoPlayer youtubeId={video.youtubeId} thumbnail={video.thumbnail} title={video.title} />
+          <VideoPlayer
+            youtubeId={video.youtubeId}
+            thumbnail={video.thumbnail}
+            toolName={video.toolName}
+            accent={video.accent}
+            title={video.title}
+          />
 
           <div className="mt-6">
             <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-accent-hover">
@@ -105,9 +111,9 @@ export default function VideoDetailsPage({ params }: { params: { slug: string } 
             <h2 className="mb-5 text-[16px] font-semibold text-primary">
               More {video.toolCategory.toLowerCase()} videos
             </h2>
-            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-              {related.map((v) => (
-                <VideoCard key={v.id} video={v} />
+            <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2">
+              {related.map((v, i) => (
+                <VideoCard key={v.id} video={v} index={i} />
               ))}
             </div>
           </div>

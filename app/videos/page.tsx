@@ -31,14 +31,24 @@ export default function VideosPage() {
       </header>
 
       {/* Hero */}
-      <section className="container pt-14 pb-10">
-        <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-accent-hover">
+      <section className="container relative overflow-hidden pt-14 pb-10">
+        <div
+          className="pointer-events-none absolute -top-24 right-[-10%] h-72 w-72 rounded-full opacity-30 blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(94,106,210,0.5), transparent 70%)" }}
+        />
+        <p className="mb-3 animate-fadeUp text-[12px] font-semibold uppercase tracking-[0.08em] text-accent-hover">
           Module 09 · Videos
         </p>
-        <h1 className="max-w-xl text-[34px] font-semibold leading-[1.15] tracking-tight text-primary sm:text-[42px]">
+        <h1
+          className="max-w-xl animate-fadeUp text-[34px] font-semibold leading-[1.15] tracking-tight text-primary sm:text-[42px]"
+          style={{ animationDelay: "60ms" }}
+        >
           See the tool work before you install it
         </h1>
-        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-secondary">
+        <p
+          className="mt-3 max-w-lg animate-fadeUp text-[15px] leading-relaxed text-secondary"
+          style={{ animationDelay: "120ms" }}
+        >
           Every listing is backed by a real walkthrough — no marketing screenshots, no
           guesswork. Watch it, then decide.
         </p>
@@ -51,9 +61,9 @@ export default function VideosPage() {
           title="Trending videos"
           description="Ranked by views over the last 7 days across all tool categories."
         />
-        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {trending.map((v, i) => (
-            <VideoCard key={v.id} video={v} rank={i + 1} />
+            <VideoCard key={v.id} video={v} rank={i + 1} index={i} />
           ))}
         </div>
       </section>
@@ -68,9 +78,9 @@ export default function VideosPage() {
         <div className="mb-8">
           <VideoFilters />
         </div>
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-          {latest.map((v) => (
-            <VideoCard key={v.id} video={v} />
+        <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          {latest.map((v, i) => (
+            <VideoCard key={v.id} video={v} index={i} />
           ))}
         </div>
 

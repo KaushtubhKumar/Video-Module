@@ -13,7 +13,16 @@ export type Video = {
   publishedAt: string; // ISO date
   author: { name: string; avatar: string };
   tags: string[];
+  /** Deterministic fallback gradient shown if the thumbnail URL ever fails to load. */
+  accent: string;
 };
+
+/** 8x8 solid-gray base64 placeholder — swapped for the real image once it loads. */
+export const BLUR_DATA_URL =
+  "data:image/svg+xml;base64," +
+  Buffer.from(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><rect width="8" height="8" fill="#151619"/></svg>'
+  ).toString("base64");
 
 export const videos: Video[] = [
   {
@@ -24,14 +33,15 @@ export const videos: Video[] = [
       "A full walkthrough of Cursor's composer mode, multi-file edits, and how it handles a real refactor across a mid-size codebase. We compare it against vanilla VS Code + Copilot to see where the workflow actually saves time.",
     toolName: "Cursor",
     toolCategory: "Developer Tools",
-    youtubeId: "ocmz8YKq_x8",
-    thumbnail: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop",
+    youtubeId: "dQw4w9WgXcQ",
+    thumbnail: "https://picsum.photos/seed/cursor-ai-pair-programmer-walkthrough/800/450",
     durationSeconds: 742,
     views: 284000,
     likes: 12400,
     publishedAt: "2026-06-24",
     author: { name: "Priya Nair", avatar: "PN" },
     tags: ["coding", "productivity", "IDE"],
+    accent: "#5e6ad2",
   },
   {
     id: "2",
@@ -41,14 +51,15 @@ export const videos: Video[] = [
       "We push Runway's Gen-4 model with fifteen prompts to test dolly, crane and handheld motion. Includes a breakdown of prompt structure that consistently gets stable, film-grade results.",
     toolName: "Runway",
     toolCategory: "Video Generation",
-    youtubeId: "dQw4w9WgXcQ",
-    thumbnail: "https://images.unsplash.com/photo-1536240478700-b869070f9279?q=80&w=1200&auto=format&fit=crop",
+    youtubeId: "jNQXAC9IVRw",
+    thumbnail: "https://picsum.photos/seed/runway-gen4-cinematic-shots/800/450",
     durationSeconds: 613,
     views: 512000,
     likes: 31000,
     publishedAt: "2026-06-27",
     author: { name: "Diego Alves", avatar: "DA" },
     tags: ["video", "generative", "filmmaking"],
+    accent: "#d85a30",
   },
   {
     id: "3",
@@ -58,14 +69,15 @@ export const videos: Video[] = [
       "From transcript to action items to calendar follow-ups — a repeatable setup using Notion AI's new database automations, no Zapier required.",
     toolName: "Notion AI",
     toolCategory: "Productivity",
-    youtubeId: "jNQXAC9IVRw",
-    thumbnail: "https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=1200&auto=format&fit=crop",
+    youtubeId: "9bZkp7q19f0",
+    thumbnail: "https://picsum.photos/seed/notion-ai-meeting-notes-automation/800/450",
     durationSeconds: 498,
     views: 98000,
     likes: 5400,
     publishedAt: "2026-06-20",
     author: { name: "Sam Okafor", avatar: "SO" },
     tags: ["productivity", "notes", "automation"],
+    accent: "#1d9e75",
   },
   {
     id: "4",
@@ -75,14 +87,15 @@ export const videos: Video[] = [
       "A blind test with ten listeners comparing cloned voices against the original speaker. We also cover the consent and watermarking flow ElevenLabs shipped this quarter.",
     toolName: "ElevenLabs",
     toolCategory: "Audio",
-    youtubeId: "3JZ_D3ELwOQ",
-    thumbnail: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=1200&auto=format&fit=crop",
+    youtubeId: "kJQP7kiw5Fk",
+    thumbnail: "https://picsum.photos/seed/elevenlabs-voice-cloning-2026/800/450",
     durationSeconds: 356,
     views: 176000,
     likes: 9800,
     publishedAt: "2026-06-15",
     author: { name: "Lena Kovacs", avatar: "LK" },
     tags: ["audio", "voice", "cloning"],
+    accent: "#d4537e",
   },
   {
     id: "5",
@@ -92,14 +105,15 @@ export const videos: Video[] = [
       "Testing the deep research agent on five real research questions spanning finance, biology and law, and grading the citations by hand.",
     toolName: "Perplexity",
     toolCategory: "Research",
-    youtubeId: "kXYiU_JCYtU",
-    thumbnail: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=1200&auto=format&fit=crop",
+    youtubeId: "dQw4w9WgXcQ",
+    thumbnail: "https://picsum.photos/seed/perplexity-deep-research-mode/800/450",
     durationSeconds: 812,
     views: 143000,
     likes: 7100,
     publishedAt: "2026-06-11",
     author: { name: "Tomas Berg", avatar: "TB" },
     tags: ["research", "search", "agents"],
+    accent: "#378add",
   },
   {
     id: "6",
@@ -109,14 +123,15 @@ export const videos: Video[] = [
       "A designer's step-by-step process for turning a rough product sketch into a photoreal packaging mockup, including the omni-reference workflow.",
     toolName: "Midjourney",
     toolCategory: "Image Generation",
-    youtubeId: "L_jWHffIx5E",
-    thumbnail: "https://images.unsplash.com/photo-1561736778-92e52a7769ef?q=80&w=1200&auto=format&fit=crop",
+    youtubeId: "jNQXAC9IVRw",
+    thumbnail: "https://picsum.photos/seed/midjourney-v7-product-mockups/800/450",
     durationSeconds: 527,
     views: 231000,
     likes: 14200,
     publishedAt: "2026-06-08",
     author: { name: "Ayaan Qureshi", avatar: "AQ" },
     tags: ["design", "image", "mockups"],
+    accent: "#ba7517",
   },
   {
     id: "7",
@@ -126,14 +141,15 @@ export const videos: Video[] = [
       "We hand Claude Code a genuinely messy Rails monolith and watch it plan, branch and open PRs for three separate refactors, with commentary on where a human still had to step in.",
     toolName: "Claude Code",
     toolCategory: "Developer Tools",
-    youtubeId: "6_b7RDuLwcI",
-    thumbnail: "https://images.unsplash.com/photo-152637995098-d400fd0bf935?q=80&w=1200&auto=format&fit=crop",
+    youtubeId: "9bZkp7q19f0",
+    thumbnail: "https://picsum.photos/seed/claude-code-refactor-legacy-repo/800/450",
     durationSeconds: 934,
     views: 402000,
     likes: 26700,
     publishedAt: "2026-06-29",
     author: { name: "Priya Nair", avatar: "PN" },
     tags: ["coding", "agents", "refactoring"],
+    accent: "#639922",
   },
   {
     id: "8",
@@ -143,14 +159,15 @@ export const videos: Video[] = [
       "Genre-hopping from lo-fi to synth-pop, we document every prompt and regeneration it took to get tracks that didn't sound obviously AI-generated.",
     toolName: "Suno",
     toolCategory: "Audio",
-    youtubeId: "eY52Zsg-KVI",
-    thumbnail: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1200&auto=format&fit=crop",
+    youtubeId: "kJQP7kiw5Fk",
+    thumbnail: "https://picsum.photos/seed/suno-v5-album-in-a-day/800/450",
     durationSeconds: 671,
     views: 318000,
     likes: 19500,
     publishedAt: "2026-06-18",
     author: { name: "Diego Alves", avatar: "DA" },
     tags: ["music", "audio", "generative"],
+    accent: "#7f77dd",
   },
 ];
 

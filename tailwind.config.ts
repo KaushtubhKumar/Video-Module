@@ -28,6 +28,25 @@ const config: Config = {
       borderRadius: {
         card: "16px",
       },
+      keyframes: {
+        shimmer: {
+          "0%": { backgroundPosition: "200% 0" },
+          "100%": { backgroundPosition: "-200% 0" },
+        },
+        fadeUp: {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        popIn: {
+          "0%": { opacity: "0", transform: "scale(0.97)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+      },
+      animation: {
+        shimmer: "shimmer 1.6s ease-in-out infinite",
+        fadeUp: "fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) both",
+        popIn: "popIn 0.18s cubic-bezier(0.16,1,0.3,1) both",
+      },
     },
   },
   plugins: [],
