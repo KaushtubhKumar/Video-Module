@@ -36,6 +36,23 @@ export default function VideosPage() {
     { value: formatCompact(totalViews), label: "Combined views" },
   ];
 
+  // Every tool in the library carries its own brand color in the data.
+  // Surface that as the page's real design language instead of one flat accent:
+  // a category → color map (for filters) and a distribution bar (the signature element).
+  const categoryMap = new Map<string, { color: string; count: number }>();
+  for (const v of videos) {
+    const existing = categoryMap.get(v.toolCategory);
+    if (existing) existing.count += 1;
+    else categoryMap.set(v.toolCategory, { color: v.accent, count: 1 });
+  }
+  const categoryColors = Object.fromEntries(
+    Array.from(categoryMap.entries()).map(([name, d]) => [name, d.color])
+  );
+  const spectrum = Array.from(categoryMap.entries()).map(([name, d]) => ({
+    name,
+    ...d,
+  }));
+
   return (
     <main className="noise-bg min-h-screen pb-24">
       {/* Top nav */}
@@ -101,14 +118,22 @@ export default function VideosPage() {
 
       {/* Hero */}
       <section className="container relative overflow-hidden pt-16 pb-16 sm:pt-20 sm:pb-20">
-        <div
-          className="pointer-events-none absolute -top-32 right-[-8%] h-96 w-96 rounded-full opacity-40 blur-[100px]"
-          style={{ background: "radial-gradient(circle, rgba(94,106,210,0.55), transparent 70%)" }}
-        />
-        <div
-          className="pointer-events-none absolute top-24 left-[-12%] h-72 w-72 rounded-full opacity-20 blur-[100px]"
-          style={{ background: "radial-gradient(circle, rgba(216,90,48,0.45), transparent 70%)" }}
-        />
+        {/* Multi-hue aurora built from real tool brand colors, not one flat accent */}
+        {spectrum.slice(0, 3).map((s, i) => (
+          <div
+            key={s.name}
+            className="pointer-events-none absolute rounded-full blur-[100px]"
+            style={{
+              background: `radial-gradient(circle, ${s.color}55, transparent 70%)`,
+              width: i === 0 ? "26rem" : "18rem",
+              height: i === 0 ? "26rem" : "18rem",
+              top: i === 0 ? "-8rem" : i === 1 ? "6rem" : "-2rem",
+              right: i === 0 ? "-8%" : undefined,
+              left: i === 1 ? "-12%" : i === 2 ? "38%" : undefined,
+              opacity: i === 0 ? 0.4 : i === 1 ? 0.22 : 0.16,
+            }}
+          />
+        ))}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.035]"
           style={{
@@ -156,13 +181,13 @@ export default function VideosPage() {
             >
               <a
                 href="#trending"
-                className="rounded-lg bg-accent px-5 py-2.5 text-[13.5px] font-medium text-white transition-colors hover:bg-accent-hover"
+                className="rounded-[6px] bg-accent px-5 py-2.5 text-[13.5px] font-medium text-white transition-colors hover:bg-accent-hover"
               >
                 Watch trending now
               </a>
               <a
                 href="#latest-videos"
-                className="rounded-lg border border-border px-5 py-2.5 text-[13.5px] font-medium text-secondary transition-colors hover:border-border-strong hover:text-primary"
+                className="rounded-[6px] border border-border px-5 py-2.5 text-[13.5px] font-medium text-secondary transition-colors hover:border-border-strong hover:text-primary"
               >
                 Browse all videos
               </a>
@@ -181,16 +206,53 @@ export default function VideosPage() {
                 </div>
               ))}
             </div>
+
+            {/* Tool spectrum — the category mix of the library, in each tool's own color */}
+            <div
+              className="mt-6 animate-fadeUp"
+              style={{ animationDelay: "220ms" }}
+            >
+              <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.06em] text-muted">
+                Library mix
+              </p>
+              <div className="flex h-2 w-full max-w-md overflow-hidden rounded-full">
+                {spectrum.map((s) => (
+                  <div
+                    key={s.name}
+                    title={`${s.name} — ${s.count} video${s.count > 1 ? "s" : ""}`}
+                    style={{ background: s.color, flexGrow: s.count }}
+                    className="h-full transition-transform first:rounded-l-full last:rounded-r-full hover:scale-y-125"
+                  />
+                ))}
+              </div>
+              <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1.5">
+                {spectrum.map((s) => (
+                  <span key={s.name} className="flex items-center gap-1.5 text-[11.5px] text-secondary">
+                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: s.color }} />
+                    {s.name}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Featured video showcase */}
           {featured && (
             <div className="relative animate-fadeUp" style={{ animationDelay: "140ms" }}>
-              <div className="pointer-events-none absolute -inset-3 -z-10 hidden rounded-[28px] border border-border bg-bg-elevated/50 sm:block" />
+              <div
+                className="pointer-events-none absolute -inset-3 -z-10 hidden rounded-[28px] border sm:block"
+                style={{
+                  borderColor: `${featured.accent}33`,
+                  background: `linear-gradient(160deg, ${featured.accent}14, transparent 60%)`,
+                }}
+              />
               <Link
                 href={`/videos/${featured.slug}`}
-                className="group relative block overflow-hidden rounded-card border border-border-strong bg-surface"
-                style={{ boxShadow: "0 32px 64px -24px rgba(0,0,0,0.65)" }}
+                className="group relative block overflow-hidden rounded-card border bg-surface"
+                style={{
+                  borderColor: `${featured.accent}40`,
+                  boxShadow: `0 32px 64px -24px rgba(0,0,0,0.65), 0 0 0 1px ${featured.accent}14`,
+                }}
               >
                 <div className="relative aspect-video overflow-hidden">
                   <ThumbImage
@@ -202,7 +264,10 @@ export default function VideosPage() {
                     priority
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                  <span className="absolute left-3 top-3 z-10 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
+                  <span
+                    className="absolute left-3 top-3 z-10 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm"
+                    style={{ background: `${featured.accent}e6` }}
+                  >
                     <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor">
                       <path d="M8 1.2c.3 2.1 1.3 3.4 2.8 4.9 1.6 1.6 2.4 3 2.4 4.7a5.2 5.2 0 0 1-10.4 0c0-1.2.4-2.2 1.2-3.4.1.9.6 1.6 1.3 1.9-.2-2.3.6-4.6 2.7-6.1Z" />
                     </svg>
@@ -220,7 +285,10 @@ export default function VideosPage() {
                   </span>
                 </div>
                 <div className="p-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-accent-hover">
+                  <p
+                    className="text-[11px] font-semibold uppercase tracking-[0.05em]"
+                    style={{ color: featured.accent }}
+                  >
                     {featured.toolCategory}
                   </p>
                   <p className="mt-1.5 line-clamp-2 text-[15px] font-medium leading-snug text-primary">
@@ -228,7 +296,7 @@ export default function VideosPage() {
                   </p>
                   <p className="mt-2 text-[12.5px] text-secondary">
                     {featured.toolName} <span className="mx-1 text-muted">·</span>{" "}
-                    {formatViews(featured.views)}
+                    <span className="font-mono">{formatViews(featured.views)}</span>
                   </p>
                 </div>
               </Link>
@@ -243,6 +311,7 @@ export default function VideosPage() {
           label="Hot this week"
           title="Trending videos"
           description="Ranked by views over the last 7 days across all tool categories."
+          accent={featured?.accent}
         />
         <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {trending.map((v, i) => (
@@ -259,11 +328,11 @@ export default function VideosPage() {
           description="New walkthroughs, sorted by publish date."
         />
         <div className="mb-8">
-          <VideoFilters />
+          <VideoFilters categoryColors={categoryColors} />
         </div>
-        <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-col divide-y divide-border">
           {latest.map((v, i) => (
-            <VideoCard key={v.id} video={v} index={i} />
+            <VideoCard key={v.id} video={v} variant="row" index={i} />
           ))}
         </div>
 

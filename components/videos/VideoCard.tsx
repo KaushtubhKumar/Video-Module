@@ -33,26 +33,40 @@ export function VideoCard({
     return (
       <Link
         href={`/videos/${video.slug}`}
-        className="group flex items-center gap-4 rounded-lg border border-transparent p-3 -mx-3 transition-colors duration-200 hover:border-border hover:bg-bg-hover"
+        className="group relative flex items-center gap-3 rounded-lg border border-transparent p-2.5 -mx-2.5 transition-colors duration-200 active:bg-bg-hover hover:border-border hover:bg-bg-hover sm:gap-4 sm:p-3 sm:-mx-3"
+        style={{ ["--tool-accent" as string]: video.accent }}
       >
-        <div className="relative w-40 shrink-0 overflow-hidden rounded-lg aspect-video bg-bg-elevated">
+        <span
+          className="absolute left-0 top-1/2 h-0 w-[3px] -translate-y-1/2 rounded-full transition-all duration-200 group-hover:h-[70%]"
+          style={{ background: video.accent }}
+        />
+        <div className="relative w-28 shrink-0 overflow-hidden rounded-lg aspect-video bg-bg-elevated sm:w-40">
           <ThumbImage
             src={video.thumbnail}
             alt=""
             toolName={video.toolName}
             accent={video.accent}
-            sizes="160px"
+            sizes="(max-width: 640px) 112px, 160px"
           />
-          <span className="absolute bottom-1.5 right-1.5 rounded bg-black/70 px-1.5 py-0.5 text-[11px] font-medium text-white font-mono">
+          <div
+            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+            style={{ boxShadow: `inset 0 0 0 1.5px ${video.accent}99` }}
+          />
+          <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1 py-0.5 text-[10px] font-medium text-white font-mono sm:bottom-1.5 sm:right-1.5 sm:text-[11px]">
             {formatDuration(video.durationSeconds)}
           </span>
         </div>
         <div className="min-w-0">
-          <p className="truncate text-[14px] font-medium text-primary group-hover:text-accent-hover">
+          <p className="line-clamp-2 text-[13.5px] font-medium leading-snug text-primary transition-colors group-hover:text-[var(--tool-accent)] sm:truncate sm:text-[14px]">
             {video.title}
           </p>
-          <p className="mt-1 text-[12.5px] text-secondary">
-            {video.toolName} · {formatViews(video.views)}
+          <p className="mt-1 flex items-center gap-1.5 truncate text-[12px] text-secondary sm:text-[12.5px]">
+            <span
+              className="h-1.5 w-1.5 shrink-0 rounded-full"
+              style={{ background: video.accent }}
+            />
+            {video.toolName} <span className="text-muted">·</span>{" "}
+            <span className="font-mono">{formatViews(video.views)}</span>
           </p>
         </div>
       </Link>
@@ -66,7 +80,11 @@ export function VideoCard({
       onMouseEnter={open}
       onMouseLeave={close}
     >
-      <Link href={`/videos/${video.slug}`} className="group relative block">
+      <Link
+        href={`/videos/${video.slug}`}
+        className="group relative block"
+        style={{ ["--tool-accent" as string]: video.accent }}
+      >
         <div className="relative overflow-hidden rounded-card border border-border bg-bg-elevated aspect-video">
           <ThumbImage
             src={video.thumbnail}
@@ -77,11 +95,23 @@ export function VideoCard({
             priority={index < 4}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-black/0 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+          <div
+            className="pointer-events-none absolute inset-0 rounded-card opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            style={{
+              boxShadow: `inset 0 0 0 1.5px ${video.accent}b3, 0 16px 36px -16px ${video.accent}66`,
+            }}
+          />
           <span className="absolute bottom-2 right-2 z-10 rounded bg-black/70 px-1.5 py-0.5 text-[11px] font-medium text-white font-mono">
             {formatDuration(video.durationSeconds)}
           </span>
           {typeof rank === "number" && (
-            <span className="absolute left-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-[13px] font-semibold text-white backdrop-blur-sm">
+            <span
+              className="absolute left-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full text-[13px] font-semibold text-white backdrop-blur-sm"
+              style={{
+                background: `${video.accent}e6`,
+                boxShadow: `0 4px 14px -2px ${video.accent}80`,
+              }}
+            >
               {rank}
             </span>
           )}
@@ -94,15 +124,21 @@ export function VideoCard({
           </span>
         </div>
         <div className="mt-3 flex gap-3">
-          <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[11px] font-semibold text-accent-hover">
+          <div
+            className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold"
+            style={{ background: `${video.accent}26`, color: video.accent }}
+          >
             {video.author.avatar}
           </div>
           <div className="min-w-0">
-            <p className="line-clamp-2 text-[14.5px] font-medium leading-snug text-primary group-hover:text-accent-hover">
+            <p
+              className="line-clamp-2 text-[14.5px] font-medium leading-snug text-primary transition-colors group-hover:text-[var(--tool-accent)]"
+            >
               {video.title}
             </p>
             <p className="mt-1.5 text-[12.5px] text-secondary">
-              {video.toolName} <span className="mx-1 text-muted">·</span> {formatViews(video.views)}
+              {video.toolName} <span className="mx-1 text-muted">·</span>{" "}
+              <span className="font-mono">{formatViews(video.views)}</span>
               <span className="mx-1 text-muted">·</span> {formatRelativeDate(video.publishedAt)}
             </p>
           </div>
@@ -112,8 +148,11 @@ export function VideoCard({
       {/* Hover preview: floats above the card, doesn't shift layout of neighbors */}
       {previewOpen && variant === "grid" && (
         <div
-          className="absolute left-0 top-0 z-30 w-full animate-popIn origin-top rounded-card border border-border-strong bg-surface shadow-2xl"
-          style={{ boxShadow: "0 24px 48px -12px rgba(0,0,0,0.55)" }}
+          className="absolute left-0 top-0 z-30 w-full animate-popIn origin-top overflow-hidden rounded-card border bg-surface shadow-2xl"
+          style={{
+            borderColor: `${video.accent}4d`,
+            boxShadow: `0 24px 48px -12px rgba(0,0,0,0.55), 0 0 0 1px ${video.accent}26`,
+          }}
         >
           <Link href={`/videos/${video.slug}`} className="block">
             <div className="relative overflow-hidden rounded-t-card aspect-video">
@@ -137,7 +176,10 @@ export function VideoCard({
             </div>
           </Link>
           <div className="p-4">
-            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-accent-hover">
+            <div
+              className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.05em]"
+              style={{ color: video.accent }}
+            >
               {video.toolCategory}
             </div>
             <Link href={`/videos/${video.slug}`}>
@@ -160,11 +202,13 @@ export function VideoCard({
             </div>
             <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
               <span className="text-[12px] text-muted">
-                {formatViews(video.views)} · {formatRelativeDate(video.publishedAt)}
+                <span className="font-mono">{formatViews(video.views)}</span> ·{" "}
+                {formatRelativeDate(video.publishedAt)}
               </span>
               <Link
                 href={`/videos/${video.slug}`}
-                className="rounded-md bg-accent px-2.5 py-1 text-[12px] font-medium text-white transition-colors hover:bg-accent-hover"
+                className="rounded-md px-2.5 py-1 text-[12px] font-medium text-white transition-colors"
+                style={{ background: video.accent }}
               >
                 Watch
               </Link>

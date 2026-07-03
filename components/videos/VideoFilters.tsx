@@ -12,9 +12,13 @@ const categories = [
   "Research",
 ];
 
+const DEFAULT_COLOR = "#5e6ad2";
+
 export function VideoFilters({
+  categoryColors = {},
   onChange,
 }: {
+  categoryColors?: Record<string, string>;
   onChange?: (state: { category: string; query: string }) => void;
 }) {
   const [active, setActive] = useState("All");
@@ -31,19 +35,43 @@ export function VideoFilters({
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none]">
-        {categories.map((c) => (
-          <button
-            key={c}
-            onClick={() => update({ category: c })}
-            className={`shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
-              active === c
-                ? "border-accent bg-accent-soft text-accent-hover"
-                : "border-border text-secondary hover:border-border-strong hover:text-primary"
-            }`}
-          >
-            {c}
-          </button>
-        ))}
+        {categories.map((c) => {
+          const color = c === "All" ? DEFAULT_COLOR : categoryColors[c] ?? DEFAULT_COLOR;
+          const isActive = active === c;
+          return (
+            <button
+              key={c}
+              onClick={() => update({ category: c })}
+              className="flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-all duration-200"
+              style={
+                isActive
+                  ? {
+                      borderColor: `${color}80`,
+                      backgroundColor: `${color}26`,
+                      color,
+                    }
+                  : {
+                      borderColor: "var(--border)",
+                      color: "var(--text-secondary)",
+                    }
+              }
+              onMouseEnter={(e) => {
+                if (!isActive) e.currentTarget.style.borderColor = "var(--border-strong)";
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) e.currentTarget.style.borderColor = "var(--border)";
+              }}
+            >
+              {c !== "All" && (
+                <span
+                  className="h-1.5 w-1.5 shrink-0 rounded-full"
+                  style={{ background: color }}
+                />
+              )}
+              {c}
+            </button>
+          );
+        })}
       </div>
       <div className="relative w-full sm:w-64">
         <svg
