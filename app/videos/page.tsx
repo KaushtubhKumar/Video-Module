@@ -55,61 +55,80 @@ export default function VideosPage() {
 
   return (
     <main className="noise-bg min-h-screen pb-24">
-      {/* Top nav */}
-      <header className="sticky top-0 z-20 border-b border-border bg-bg/80 backdrop-blur-md">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-[#8b7ff0] text-[13px] font-bold text-white"
-              style={{ boxShadow: "0 0 0 1px rgba(255,255,255,0.08), 0 6px 16px -4px rgba(94,106,210,0.55)" }}
-            >
-              A
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-[14.5px] font-semibold tracking-tight">AI Tools</span>
-              <span className="h-3.5 w-px bg-border" />
-              <span className="text-[14.5px] font-medium text-secondary">Videos</span>
+      {/* Top nav — terminal header bar */}
+      <header className="sticky top-0 z-20 border-b border-border bg-bg/90 backdrop-blur-md">
+        {/* Thin status strip */}
+        <div className="hidden border-b border-border/60 sm:block">
+          <div className="container flex h-7 items-center justify-between font-mono text-[10.5px] tracking-[0.04em] text-muted">
+            <div className="flex items-center gap-4">
+              <span className="flex items-center gap-1.5" style={{ color: "#4cb782" }}>
+                <span className="relative flex h-1.5 w-1.5">
+                  <span
+                    className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
+                    style={{ background: "#4cb782" }}
+                  />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full" style={{ background: "#4cb782" }} />
+                </span>
+                LIVE
+              </span>
+              <span>{totalVideos} INDEXED</span>
+              <span>{toolsCovered} TOOLS</span>
             </div>
+            <span>MODULE 09 / VIDEOS</span>
+          </div>
+        </div>
+
+        <div className="container flex h-[60px] items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-2.5">
+              <span
+                className="flex h-8 w-8 items-center justify-center rounded-sm bg-accent font-mono text-[13px] font-bold text-white"
+                style={{ boxShadow: "0 0 0 1px rgba(255,255,255,0.08)" }}
+              >
+                A
+              </span>
+              <span className="font-mono text-[15px] font-semibold uppercase tracking-[0.02em] text-primary">
+                AI Tools
+              </span>
+            </Link>
+            <span className="h-5 w-px bg-border" />
+            <span className="font-mono text-[13px] font-medium uppercase tracking-[0.04em] text-secondary">
+              Videos
+            </span>
           </div>
 
-          <nav className="hidden items-center gap-1 sm:flex">
-            <Link
-              href="#"
-              className="rounded-full px-3.5 py-1.5 text-[13.5px] font-medium text-secondary transition-colors hover:bg-bg-hover hover:text-primary"
-            >
-              Browse tools
-            </Link>
-            <Link
-              href="#"
-              className="rounded-full bg-bg-hover px-3.5 py-1.5 text-[13.5px] font-medium text-primary"
-            >
-              Videos
-            </Link>
-            <Link
-              href="#"
-              className="rounded-full px-3.5 py-1.5 text-[13.5px] font-medium text-secondary transition-colors hover:bg-bg-hover hover:text-primary"
-            >
-              Collections
-            </Link>
-            <Link
-              href="#"
-              className="rounded-full px-3.5 py-1.5 text-[13.5px] font-medium text-secondary transition-colors hover:bg-bg-hover hover:text-primary"
-            >
-              Submit a tool
-            </Link>
+          <nav className="hidden items-center gap-0.5 sm:flex">
+            {[
+              { label: "Browse tools", active: false },
+              { label: "Videos", active: true },
+              { label: "Collections", active: false },
+              { label: "Submit a tool", active: false },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href="#"
+                className={`rounded-sm px-3.5 py-2 font-mono text-[12.5px] font-medium uppercase tracking-[0.03em] transition-colors ${
+                  item.active
+                    ? "bg-bg-hover text-primary"
+                    : "text-secondary hover:bg-bg-hover/60 hover:text-primary"
+                }`}
+              >
+                {item.active ? `[ ${item.label} ]` : item.label}
+              </Link>
+            ))}
           </nav>
 
           <div className="flex items-center gap-2">
             <button
               aria-label="Search"
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-secondary transition-colors hover:border-border-strong hover:text-primary"
+              className="flex h-9 w-9 items-center justify-center rounded-sm border border-border text-secondary transition-colors hover:border-border-strong hover:text-primary"
             >
               <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
                 <circle cx="7" cy="7" r="5.25" stroke="currentColor" strokeWidth="1.4" />
                 <path d="M11 11l3.5 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
               </svg>
             </button>
-            <button className="hidden items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-accent-hover sm:flex">
+            <button className="hidden items-center gap-1.5 rounded-sm bg-accent px-4 py-2 font-mono text-[12px] font-semibold uppercase tracking-[0.03em] text-white transition-colors hover:bg-accent-hover sm:flex">
               Submit a tool
             </button>
           </div>
@@ -117,7 +136,7 @@ export default function VideosPage() {
       </header>
 
       {/* Hero */}
-      <section className="container relative overflow-hidden pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className="container relative overflow-hidden pt-16 pb-16 sm:pt-24 sm:pb-20">
         {/* Multi-hue aurora built from real tool brand colors, not one flat accent */}
         {spectrum.slice(0, 3).map((s, i) => (
           <div
@@ -147,18 +166,18 @@ export default function VideosPage() {
         <div className="relative grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
           <div>
             <div
-              className="mb-5 inline-flex animate-fadeUp items-center gap-2 rounded-full border border-border bg-bg-elevated py-1 pl-1.5 pr-3.5"
+              className="mb-6 inline-flex animate-fadeUp items-center gap-2 rounded-sm border border-border bg-bg-elevated py-1.5 pl-2 pr-3"
             >
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent-soft">
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-accent-soft">
                 <span className="h-1.5 w-1.5 rounded-full bg-accent-hover" />
               </span>
-              <span className="text-[12px] font-semibold uppercase tracking-[0.06em] text-accent-hover">
-                Module 09 · Videos
+              <span className="font-mono text-[11.5px] font-semibold uppercase tracking-[0.1em] text-accent-hover">
+                Module 09 // Videos
               </span>
             </div>
 
             <h1
-              className="max-w-xl animate-fadeUp text-[36px] font-semibold leading-[1.12] tracking-tight text-primary sm:text-[48px]"
+              className="max-w-2xl animate-fadeUp text-[44px] font-bold leading-[1.04] tracking-[-0.02em] text-primary sm:text-[64px]"
               style={{ animationDelay: "60ms" }}
             >
               See the tool work{" "}
@@ -168,7 +187,7 @@ export default function VideosPage() {
             </h1>
 
             <p
-              className="mt-4 max-w-lg animate-fadeUp text-[15.5px] leading-relaxed text-secondary"
+              className="mt-5 max-w-lg animate-fadeUp text-[17px] leading-relaxed text-secondary"
               style={{ animationDelay: "120ms" }}
             >
               Every listing is backed by a real walkthrough — no marketing screenshots, no
@@ -176,43 +195,46 @@ export default function VideosPage() {
             </p>
 
             <div
-              className="mt-7 flex animate-fadeUp flex-wrap items-center gap-3"
+              className="mt-8 flex animate-fadeUp flex-wrap items-center gap-3"
               style={{ animationDelay: "160ms" }}
             >
               <a
                 href="#trending"
-                className="rounded-[6px] bg-accent px-5 py-2.5 text-[13.5px] font-medium text-white transition-colors hover:bg-accent-hover"
+                className="rounded-sm bg-accent px-5 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-accent-hover"
               >
                 Watch trending now
               </a>
               <a
                 href="#latest-videos"
-                className="rounded-[6px] border border-border px-5 py-2.5 text-[13.5px] font-medium text-secondary transition-colors hover:border-border-strong hover:text-primary"
+                className="rounded-sm border border-border px-5 py-3 text-[14px] font-semibold text-secondary transition-colors hover:border-border-strong hover:text-primary"
               >
                 Browse all videos
               </a>
             </div>
 
+            {/* Stat readout row — terminal ticker treatment */}
             <div
-              className="mt-10 flex animate-fadeUp flex-wrap gap-x-9 gap-y-5 border-t border-border pt-6"
+              className="mt-11 flex animate-fadeUp flex-wrap gap-x-8 gap-y-5 border-t border-border pt-7"
               style={{ animationDelay: "200ms" }}
             >
-              {stats.map((s) => (
-                <div key={s.label}>
-                  <p className="font-mono text-[21px] font-semibold tracking-tight text-primary">
+              {stats.map((s, i) => (
+                <div key={s.label} className={i > 0 ? "border-l border-border pl-8" : ""}>
+                  <p className="font-mono text-[28px] font-bold leading-none tracking-tight text-primary">
                     {s.value}
                   </p>
-                  <p className="mt-0.5 text-[12px] text-secondary">{s.label}</p>
+                  <p className="mt-2 font-mono text-[10.5px] font-medium uppercase tracking-[0.08em] text-muted">
+                    {s.label}
+                  </p>
                 </div>
               ))}
             </div>
 
             {/* Tool spectrum — the category mix of the library, in each tool's own color */}
             <div
-              className="mt-6 animate-fadeUp"
+              className="mt-7 animate-fadeUp"
               style={{ animationDelay: "220ms" }}
             >
-              <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.06em] text-muted">
+              <p className="mb-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.08em] text-muted">
                 Library mix
               </p>
               <div className="flex h-2 w-full max-w-md overflow-hidden rounded-full">
@@ -286,7 +308,7 @@ export default function VideosPage() {
                 </div>
                 <div className="p-4">
                   <p
-                    className="text-[11px] font-semibold uppercase tracking-[0.05em]"
+                    className="font-mono text-[11px] font-semibold uppercase tracking-[0.08em]"
                     style={{ color: featured.accent }}
                   >
                     {featured.toolCategory}
@@ -338,7 +360,7 @@ export default function VideosPage() {
 
         {latest.length < videos.length && (
           <div className="mt-10 flex justify-center">
-            <button className="rounded-lg border border-border px-5 py-2.5 text-[13.5px] font-medium text-secondary transition-colors hover:border-border-strong hover:text-primary">
+            <button className="rounded-sm border border-border px-5 py-2.5 font-mono text-[12.5px] font-semibold uppercase tracking-[0.03em] text-secondary transition-colors hover:border-border-strong hover:text-primary">
               Load more videos
             </button>
           </div>

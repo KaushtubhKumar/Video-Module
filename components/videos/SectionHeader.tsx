@@ -12,20 +12,20 @@ export function SectionHeader({
   accent?: string;
 }) {
   return (
-    <div className="mb-6 flex items-end justify-between gap-4">
+    <div className="mb-7 flex items-end justify-between gap-4 border-b border-border pb-5">
       <div>
         <p
-          className="mb-2 flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.08em]"
+          className="mb-2.5 flex items-center gap-2 font-mono text-[11.5px] font-semibold uppercase tracking-[0.1em]"
           style={{ color: accent }}
         >
           <span
-            className="h-[3px] w-4 rounded-full"
+            className="h-[3px] w-5 rounded-full"
             style={{ background: accent }}
           />
           {label}
         </p>
-        <h2 className="text-[22px] font-semibold tracking-tight text-primary">{title}</h2>
-        {description && <p className="mt-1.5 text-[14px] text-secondary">{description}</p>}
+        <h2 className="text-[28px] font-bold tracking-[-0.01em] text-primary">{title}</h2>
+        {description && <p className="mt-1.5 text-[14.5px] text-secondary">{description}</p>}
       </div>
       {action}
     </div>
