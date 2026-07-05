@@ -15,6 +15,8 @@ export type Video = {
   tags: string[];
   /** Deterministic fallback gradient shown if the thumbnail URL ever fails to load. */
   accent: string;
+  /** Skill level required to get value out of the video — drives the table's Level column/filter. */
+  level: "Beginner" | "Intermediate" | "Advanced" | "Expert";
 };
 
 /** 8x8 solid-gray base64 placeholder — swapped for the real image once it loads. */
@@ -42,6 +44,7 @@ export const videos: Video[] = [
     author: { name: "Priya Nair", avatar: "PN" },
     tags: ["coding", "productivity", "IDE"],
     accent: "#5e6ad2",
+    level: "Intermediate",
   },
   {
     id: "2",
@@ -60,6 +63,7 @@ export const videos: Video[] = [
     author: { name: "Diego Alves", avatar: "DA" },
     tags: ["video", "generative", "filmmaking"],
     accent: "#d85a30",
+    level: "Advanced",
   },
   {
     id: "3",
@@ -78,6 +82,7 @@ export const videos: Video[] = [
     author: { name: "Sam Okafor", avatar: "SO" },
     tags: ["productivity", "notes", "automation"],
     accent: "#1d9e75",
+    level: "Beginner",
   },
   {
     id: "4",
@@ -96,6 +101,7 @@ export const videos: Video[] = [
     author: { name: "Lena Kovacs", avatar: "LK" },
     tags: ["audio", "voice", "cloning"],
     accent: "#d4537e",
+    level: "Intermediate",
   },
   {
     id: "5",
@@ -114,6 +120,7 @@ export const videos: Video[] = [
     author: { name: "Tomas Berg", avatar: "TB" },
     tags: ["research", "search", "agents"],
     accent: "#378add",
+    level: "Advanced",
   },
   {
     id: "6",
@@ -132,6 +139,7 @@ export const videos: Video[] = [
     author: { name: "Ayaan Qureshi", avatar: "AQ" },
     tags: ["design", "image", "mockups"],
     accent: "#ba7517",
+    level: "Beginner",
   },
   {
     id: "7",
@@ -150,6 +158,7 @@ export const videos: Video[] = [
     author: { name: "Priya Nair", avatar: "PN" },
     tags: ["coding", "agents", "refactoring"],
     accent: "#639922",
+    level: "Expert",
   },
   {
     id: "8",
@@ -168,6 +177,7 @@ export const videos: Video[] = [
     author: { name: "Diego Alves", avatar: "DA" },
     tags: ["music", "audio", "generative"],
     accent: "#7f77dd",
+    level: "Intermediate",
   },
 ];
 
@@ -203,6 +213,25 @@ export function formatViews(views: number) {
   if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}M views`;
   if (views >= 1_000) return `${(views / 1_000).toFixed(0)}K views`;
   return `${views} views`;
+}
+
+/** "Jul 2, 2026" — used by the table listing's Posted column. */
+export function formatPostedDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+/** Raw comma-formatted view count, e.g. "1,255" — table listing shows exact counts, not "K/M". */
+export function formatViewsCount(views: number) {
+  return views.toLocaleString("en-US");
+}
+
+/** Derives a "@handle" from the author's display name for the table's Channel column. */
+export function channelHandle(name: string) {
+  return "@" + name.toLowerCase().replace(/[^a-z]+/g, "");
 }
 
 export function formatRelativeDate(iso: string) {
