@@ -291,21 +291,51 @@ export function VideosExplorer({ videos }: { videos: Video[] }) {
           </div>
 
           <div className="divide-y divide-border">
-            {filtered.map((v) => (
+            {filtered.map((v, i) => (
               <Link
                 key={v.id}
                 href={`/videos/${v.slug}`}
-                className="group flex flex-col gap-2.5 px-4 py-3.5 transition-colors hover:bg-bg-hover sm:grid sm:grid-cols-[minmax(0,1fr)_110px_90px_110px_190px_80px] sm:items-center sm:gap-4 sm:px-5 sm:py-3"
+                className="group relative flex animate-fadeUp flex-col gap-2.5 px-4 py-3.5 transition-colors duration-150 hover:bg-bg-hover sm:grid sm:grid-cols-[minmax(0,1fr)_110px_90px_110px_190px_80px] sm:items-center sm:gap-4 sm:px-5 sm:py-3"
+                style={{
+                  animationDelay: `${Math.min(i, 12) * 35}ms`,
+                  ["--tool-accent" as string]: v.accent,
+                }}
               >
+                {/* Per-tool accent indicator — flush left, grows in on hover */}
+                <span
+                  className="absolute left-0 top-1/2 h-0 w-[3px] -translate-y-1/2 rounded-full transition-all duration-200 group-hover:h-[60%]"
+                  style={{ background: v.accent }}
+                />
+
                 {/* Thumbnail + title */}
-                <div className="flex min-w-0 items-start gap-3">
+                <div className="flex min-w-0 items-center gap-3">
                   <div className="relative aspect-video w-24 shrink-0 overflow-hidden rounded-md bg-bg-elevated sm:w-28">
                     <ThumbImage src={v.thumbnail} alt="" toolName={v.toolName} accent={v.accent} sizes="112px" />
+                    <div
+                      className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                      style={{ boxShadow: `inset 0 0 0 1.5px ${v.accent}99` }}
+                    />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="line-clamp-2 text-[13.5px] font-medium leading-snug text-primary transition-colors group-hover:text-accent-hover sm:text-[14px]">
+                    <p className="line-clamp-2 text-[13.5px] font-medium leading-snug text-primary transition-colors group-hover:text-[var(--tool-accent)] sm:text-[14px]">
                       {v.title}
                     </p>
+                    {/* Tags — visible from sm+, adds scannable density to the row */}
+                    <div className="mt-1.5 hidden items-center gap-1.5 sm:flex">
+                      <span
+                        className="h-1.5 w-1.5 shrink-0 rounded-full"
+                        style={{ background: v.accent }}
+                      />
+                      <span className="truncate text-[12px] text-secondary">{v.toolName}</span>
+                      {v.tags?.slice(0, 2).map((t) => (
+                        <span
+                          key={t}
+                          className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[10.5px] text-muted"
+                        >
+                          #{t}
+                        </span>
+                      ))}
+                    </div>
                     {/* Condensed meta line — mobile only */}
                     <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 font-mono text-[11.5px] text-muted sm:hidden">
                       <span>{formatPostedDate(v.publishedAt)}</span>

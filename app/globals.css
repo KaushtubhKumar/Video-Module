@@ -78,3 +78,88 @@ button {
   overflow: hidden;
   clip: rect(0 0 0 0);
 }
+
+/* ---- Videos page: mesh backdrop + glass + glow utilities ---- */
+
+.video-mesh-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.video-mesh-bg::before,
+.video-mesh-bg::after {
+  content: "";
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  max-width: 720px;
+  max-height: 720px;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.16;
+}
+
+.video-mesh-bg::before {
+  top: -18%;
+  left: -12%;
+  background: radial-gradient(circle, #5e6ad2, transparent 70%);
+  animation: meshDrift 16s ease-in-out infinite;
+}
+
+.video-mesh-bg::after {
+  top: -8%;
+  right: -14%;
+  background: radial-gradient(circle, #d4537e, transparent 70%);
+  animation: meshDrift 20s ease-in-out infinite reverse;
+}
+
+.grid-overlay {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, black 40%, transparent 90%);
+}
+
+.glass-panel {
+  background: rgba(17, 18, 20, 0.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+}
+
+.glow-border {
+  position: relative;
+}
+
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg, rgba(94, 106, 210, 0.55), rgba(212, 83, 126, 0.35), rgba(94, 106, 210, 0.55));
+  background-size: 200% 200%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  animation: gradientX 5s ease infinite;
+  pointer-events: none;
+}
+
+.glow-border:hover::before {
+  opacity: 1;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #edeef0, #9aa0e8 50%, #edeef0);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientX 8s linear infinite;
+}
