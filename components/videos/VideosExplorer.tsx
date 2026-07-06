@@ -203,7 +203,7 @@ export function VideosExplorer({ videos }: { videos: Video[] }) {
   return (
     <div>
       {/* Filter toolbar */}
-      <div className="mb-6 flex flex-wrap items-center gap-2.5">
+      <div className="mb-5 space-y-2.5">
         <div className="relative">
           <svg
             className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
@@ -218,52 +218,58 @@ export function VideosExplorer({ videos }: { videos: Video[] }) {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Name"
-            className="w-48 rounded-sm border border-border bg-bg-elevated py-2 pl-8 pr-3 text-[13px] text-primary placeholder:text-muted outline-none transition-colors focus:border-border-strong sm:w-56"
+            placeholder="Search videos"
+            className="w-full rounded-sm border border-border bg-bg-elevated py-2 pl-8 pr-3 text-[13px] text-primary placeholder:text-muted outline-none transition-colors focus:border-border-strong sm:w-56"
           />
         </div>
 
-        <div className="rounded-sm border border-border px-3 py-2">
-          <SortableHeader label="Posted" sortKey="posted" activeKey={sortKey} dir={sortDir} onSort={handleSort} />
-        </div>
-        <div className="rounded-sm border border-border px-3 py-2">
-          <SortableHeader label="Views" sortKey="views" activeKey={sortKey} dir={sortDir} onSort={handleSort} />
-        </div>
-        <div className="rounded-sm border border-border px-3 py-2">
-          <SortableHeader label="Duration" sortKey="duration" activeKey={sortKey} dir={sortDir} onSort={handleSort} />
+        <div className="-mx-4 flex items-center gap-2 overflow-x-auto px-4 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden">
+          <div className="shrink-0 rounded-sm border border-border px-3 py-2">
+            <SortableHeader label="Posted" sortKey="posted" activeKey={sortKey} dir={sortDir} onSort={handleSort} />
+          </div>
+          <div className="shrink-0 rounded-sm border border-border px-3 py-2">
+            <SortableHeader label="Views" sortKey="views" activeKey={sortKey} dir={sortDir} onSort={handleSort} />
+          </div>
+          <div className="shrink-0 rounded-sm border border-border px-3 py-2">
+            <SortableHeader label="Duration" sortKey="duration" activeKey={sortKey} dir={sortDir} onSort={handleSort} />
+          </div>
+
+          <div className="shrink-0">
+            <FilterDropdown
+              label="Level"
+              options={levelOptions}
+              selected={levelFilter}
+              onToggle={(v) => toggleSet(setLevelFilter, v)}
+              onClear={() => setLevelFilter(new Set())}
+            />
+          </div>
+          <div className="shrink-0">
+            <FilterDropdown
+              label="Channel"
+              options={channelOptions}
+              selected={channelFilter}
+              onToggle={(v) => toggleSet(setChannelFilter, v)}
+              onClear={() => setChannelFilter(new Set())}
+            />
+          </div>
+
+          {(query || levelFilter.size > 0 || channelFilter.size > 0) && (
+            <button
+              onClick={() => {
+                setQuery("");
+                setLevelFilter(new Set());
+                setChannelFilter(new Set());
+              }}
+              className="shrink-0 whitespace-nowrap text-[12.5px] font-medium text-muted transition-colors hover:text-primary"
+            >
+              Reset
+            </button>
+          )}
         </div>
 
-        <FilterDropdown
-          label="Level"
-          options={levelOptions}
-          selected={levelFilter}
-          onToggle={(v) => toggleSet(setLevelFilter, v)}
-          onClear={() => setLevelFilter(new Set())}
-        />
-        <FilterDropdown
-          label="Channel"
-          options={channelOptions}
-          selected={channelFilter}
-          onToggle={(v) => toggleSet(setChannelFilter, v)}
-          onClear={() => setChannelFilter(new Set())}
-        />
-
-        {(query || levelFilter.size > 0 || channelFilter.size > 0) && (
-          <button
-            onClick={() => {
-              setQuery("");
-              setLevelFilter(new Set());
-              setChannelFilter(new Set());
-            }}
-            className="text-[12.5px] font-medium text-muted transition-colors hover:text-primary"
-          >
-            Reset filters
-          </button>
-        )}
-
-        <span className="ml-auto font-mono text-[12px] text-muted">
+        <p className="text-right font-mono text-[12px] text-muted">
           {filtered.length.toLocaleString()} video{filtered.length === 1 ? "" : "s"}
-        </span>
+        </p>
       </div>
 
       {/* Listing */}
@@ -289,24 +295,55 @@ export function VideosExplorer({ videos }: { videos: Video[] }) {
               <Link
                 key={v.id}
                 href={`/videos/${v.slug}`}
-                className="group grid grid-cols-[minmax(0,1fr)] gap-3 px-4 py-3 transition-colors hover:bg-bg-hover sm:grid-cols-[minmax(0,1fr)_110px_90px_110px_190px_80px] sm:items-center sm:gap-4 sm:px-5"
+                className="group flex flex-col gap-2.5 px-4 py-3.5 transition-colors hover:bg-bg-hover sm:grid sm:grid-cols-[minmax(0,1fr)_110px_90px_110px_190px_80px] sm:items-center sm:gap-4 sm:px-5 sm:py-3"
               >
-                <div className="flex min-w-0 items-center gap-3">
+                {/* Thumbnail + title */}
+                <div className="flex min-w-0 items-start gap-3">
                   <div className="relative aspect-video w-24 shrink-0 overflow-hidden rounded-md bg-bg-elevated sm:w-28">
                     <ThumbImage src={v.thumbnail} alt="" toolName={v.toolName} accent={v.accent} sizes="112px" />
                   </div>
-                  <p className="line-clamp-2 min-w-0 text-[13.5px] font-medium leading-snug text-primary transition-colors group-hover:text-accent-hover sm:text-[14px]">
-                    {v.title}
-                  </p>
+                  <div className="min-w-0 flex-1">
+                    <p className="line-clamp-2 text-[13.5px] font-medium leading-snug text-primary transition-colors group-hover:text-accent-hover sm:text-[14px]">
+                      {v.title}
+                    </p>
+                    {/* Condensed meta line — mobile only */}
+                    <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 font-mono text-[11.5px] text-muted sm:hidden">
+                      <span>{formatPostedDate(v.publishedAt)}</span>
+                      <span>·</span>
+                      <span>{formatViewsCount(v.views)} views</span>
+                      <span>·</span>
+                      <span>{formatDuration(v.durationSeconds)}</span>
+                    </p>
+                  </div>
                 </div>
 
-                <span className="font-mono text-[12.5px] font-semibold text-primary">
+                {/* Badge + channel — own row on mobile, own columns from sm+ */}
+                <div className="flex items-center justify-between gap-3 sm:hidden">
+                  <span
+                    className="inline-flex items-center rounded-full px-2.5 py-1 text-[11.5px] font-semibold"
+                    style={{ color: LEVEL_COLOR[v.level], background: `${LEVEL_COLOR[v.level]}1f` }}
+                  >
+                    {v.level}
+                  </span>
+                  <div className="flex min-w-0 items-center gap-2">
+                    <div
+                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold"
+                      style={{ background: `${v.accent}26`, color: v.accent }}
+                    >
+                      {v.author.avatar}
+                    </div>
+                    <p className="truncate text-[12px] font-medium text-secondary">{v.author.name}</p>
+                  </div>
+                </div>
+
+                {/* sm+ only: separate columns */}
+                <span className="hidden font-mono text-[12.5px] font-semibold text-primary sm:block">
                   {formatPostedDate(v.publishedAt)}
                 </span>
-                <span className="font-mono text-[12.5px] font-semibold text-primary">
+                <span className="hidden font-mono text-[12.5px] font-semibold text-primary sm:block">
                   {formatViewsCount(v.views)}
                 </span>
-                <span>
+                <span className="hidden sm:block">
                   <span
                     className="inline-flex items-center rounded-full px-2.5 py-1 text-[11.5px] font-semibold"
                     style={{ color: LEVEL_COLOR[v.level], background: `${LEVEL_COLOR[v.level]}1f` }}
@@ -314,7 +351,7 @@ export function VideosExplorer({ videos }: { videos: Video[] }) {
                     {v.level}
                   </span>
                 </span>
-                <div className="flex min-w-0 items-center gap-2">
+                <div className="hidden min-w-0 items-center gap-2 sm:flex">
                   <div
                     className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold"
                     style={{ background: `${v.accent}26`, color: v.accent }}
@@ -326,7 +363,7 @@ export function VideosExplorer({ videos }: { videos: Video[] }) {
                     <p className="truncate font-mono text-[11px] text-muted">{channelHandle(v.author.name)}</p>
                   </div>
                 </div>
-                <span className="font-mono text-[12.5px] font-semibold text-secondary sm:text-right">
+                <span className="hidden font-mono text-[12.5px] font-semibold text-secondary sm:block sm:text-right">
                   {formatDuration(v.durationSeconds)}
                 </span>
               </Link>
